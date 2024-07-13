@@ -1,0 +1,89 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SimpleCalculatorGUI extends JFrame {
+    private JTextField num1Field;
+    private JTextField num2Field;
+    private JComboBox<String> operationBox;
+    private JLabel resultLabel;
+
+    public SimpleCalculatorGUI() {
+        setTitle("Simple Calculator");
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(5, 2));
+
+        // Create components
+        JLabel num1Label = new JLabel("Enter first number:");
+        num1Field = new JTextField();
+        JLabel num2Label = new JLabel("Enter second number:");
+        num2Field = new JTextField();
+        JLabel operationLabel = new JLabel("Choose operation:");
+        operationBox = new JComboBox<>(new String[]{"+", "-", "*", "/"});
+        JButton calculateButton = new JButton("Calculate");
+        resultLabel = new JLabel("Result:");
+
+        // Add components to frame
+        add(num1Label);
+        add(num1Field);
+        add(num2Label);
+        add(num2Field);
+        add(operationLabel);
+        add(operationBox);
+        add(new JLabel("")); // Empty cell
+        add(calculateButton);
+        add(new JLabel("")); // Empty cell
+        add(resultLabel);
+
+        // Add action listener to calculate button
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculate();
+            }
+        });
+    }
+
+    private void calculate() {
+        try {
+            double num1 = Double.parseDouble(num1Field.getText());
+            double num2 = Double.parseDouble(num2Field.getText());
+            String operation = (String) operationBox.getSelectedItem();
+
+            double result = 0;
+            switch (operation) {
+                case "+":
+                    result = num1 + num2;
+                    break;
+                case "-":
+                    result = num1 - num2;
+                    break;
+                case "*":
+                    result = num1 * num2;
+                    break;
+                case "/":
+                    if (num2 != 0) {
+                        result = num1 / num2;
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error! Division by zero is not allowed.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    break;
+            }
+            resultLabel.setText("Result: " + result);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new SimpleCalculatorGUI().setVisible(true);
+            }
+        });
+    }
+}
